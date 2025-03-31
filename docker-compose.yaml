@@ -2,7 +2,7 @@ services:
   api:
     build: .
     ports:
-      - "${API_PORT}:8089"
+      - ${API_PORT}":8089"
     environment:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}
     depends_on:
@@ -15,9 +15,9 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "${DB_PORT}:5432"
+      - ${DB_PORT}":5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
+      test: ["CMD", "pg_isready", "-U", ${DB_USER}, "-d", ${DB_NAME}]
       interval: 30s
       retries: 5
       start_period: 5s
