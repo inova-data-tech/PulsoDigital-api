@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.session import Base
+from app.core.bootstrap.db import Base
 
 class Topic(Base):
     __tablename__ = 'topics'

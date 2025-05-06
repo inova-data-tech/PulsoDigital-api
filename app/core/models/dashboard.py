@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
-from app.db.session import Base
+from app.core.bootstrap.db import Base
 
 class Dashboard(Base):
     __tablename__ = 'dashboards'

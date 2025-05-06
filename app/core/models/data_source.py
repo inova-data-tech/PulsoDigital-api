@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.session import Base
+from app.core.bootstrap.db import Base
 
 class DataSource(Base):
     __tablename__ = 'data_sources'
