@@ -1,0 +1,91 @@
+name: Generate Changelog
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Permite executar manualmente também
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Necessário para acessar o histórico completo de commits
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      
+      - name: Get last tag or use initial commit
+        id: lasttag
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          echo "lasttag=$LAST_TAG" >> $GITHUB_OUTPUT
+          echo "Using $LAST_TAG as reference point"
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          mkdir -p docs/changelogs
+          CHANGELOG_FILE="docs/changelogs/changelog-${{ steps.date.outputs.date }}.md"
+          
+          echo "# Changelog - ${{ steps.date.outputs.date }}" > $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          echo "## Changes since ${{ steps.lasttag.outputs.lasttag }}" >> $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          
+          # Gerar changelog por categorias baseado em prefixos de commit
+          echo "### Features" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^feat" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "### Bug Fixes" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^fix" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "### Documentation" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^docs" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "### Performance Improvements" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^perf" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "### Refactoring" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^refactor" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "### Other Changes" >> $CHANGELOG_FILE
+          git log ${{ steps.lasttag.outputs.lasttag }}..HEAD --pretty=format:"* %s" --grep="^style\|^test\|^chore\|^ci\|^build" >> $CHANGELOG_FILE
+          echo -e "\n" >> $CHANGELOG_FILE
+          
+          echo "Changelog generated at $CHANGELOG_FILE"
+      
+      - name: Create or update tag
+        id: tag
+        run: |
+          NEW_TAG="v$(date +'%Y.%m.%d')"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a $NEW_TAG -m "Release $NEW_TAG"
+          git push origin $NEW_TAG
+          echo "newtag=$NEW_TAG" >> $GITHUB_OUTPUT
+        
+      - name: Commit changelog
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/changelogs/
+          git commit -m "docs: update changelog for ${{ steps.tag.outputs.newtag }}" || echo "No changes to commit"
+          git push
