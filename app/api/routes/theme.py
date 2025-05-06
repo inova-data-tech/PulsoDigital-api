@@ -1,27 +1,31 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
-from app.core.schemas.theme import Theme
-from app.db.session import get_db
-from app.services import theme_service
+from fastapi import APIRouter, Depends
+from typing import List
+from app.core.schemas.theme import ThemeCreate, ThemeUpdate, Theme
+from app.api.dependencies import get_theme_service
+from app.services.theme_service import ThemeService
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/api/themes",
+    tags=["Themes"]
+)
 
-@router.post("/", response_model=Theme, tags=["Themes"])
-def create_theme(theme: Theme, db: Session = Depends(get_db)):
-    return theme_service.create_theme(db, theme)
+@router.post("/", response_model=Theme)
+def create_theme(theme: ThemeCreate, service: ThemeService = Depends(get_theme_service)):
+    return service.create(theme)
 
-@router.get("/", response_model=list[Theme], tags=["Themes"])
-def get_themes(db: Session = Depends(get_db)):
-    return theme_service.get_themes(db)
+@router.get("/", response_model=List[Theme])
+def get_themes(service: ThemeService = Depends(get_theme_service)):
+    return service.get_all()
 
-@router.get("/{theme_id}", response_model=Theme, tags=["Themes"])
-def get_theme(theme_id: int, db: Session = Depends(get_db)):
-    return theme_service.get_theme(db, theme_id)
+@router.get("/{theme_id}", response_model=Theme)
+def get_theme(theme_id: int, service: ThemeService = Depends(get_theme_service)):
+    return service.get_by_id(theme_id)
 
-@router.put("/{theme_id}", response_model=Theme, tags=["Themes"])
-def update_theme(theme_id: int, theme: Theme, db: Session = Depends(get_db)):
-    return theme_service.update_theme(db, theme_id, theme)
+@router.put("/{theme_id}", response_model=Theme)
+def update_theme(theme_id: int, theme: ThemeUpdate, service: ThemeService = Depends(get_theme_service)):
+    return service.update(theme_id, theme)
 
-@router.delete("/{theme_id}", tags=["Themes"], status_code=204)
-def delete_theme(theme_id: int, db: Session = Depends(get_db)):
-    theme_service.delete_theme(db, theme_id)
+@router.delete("/{theme_id}", status_code=204)
+def delete_theme(theme_id: int, service: ThemeService = Depends(get_theme_service)):
+    service.delete(theme_id)
+    return None
