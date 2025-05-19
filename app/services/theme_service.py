@@ -2,7 +2,7 @@ from typing import List, Optional
 from fastapi import HTTPException
 from app.core.schemas.theme import ThemeCreate, ThemeUpdate, Theme as ThemeSchema
 from app.repositories.theme_repository import ThemeRepository
-from sqlalchemy.orm import Session
+
 
 class ThemeService:
     def __init__(self, repository: ThemeRepository):

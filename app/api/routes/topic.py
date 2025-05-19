@@ -1,27 +1,31 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
-from app.core.schemas.topic import Topic
-from app.db.session import get_db
-from app.services import topic_service
+from fastapi import APIRouter, Depends
+from typing import List
+from app.core.schemas.topic import TopicCreate, TopicUpdate, Topic
+from app.api.dependencies import get_topic_service
+from app.services.topic_service import TopicService
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/api/topics",
+    tags=["Topics"]
+)
 
-@router.post("/", response_model=Topic, tags=["Topics"])
-def create_topic(topic: Topic, db: Session = Depends(get_db)):
-    return topic_service.create_topic(db, topic)
+@router.post("/", response_model=Topic)
+def create_topic(topic: TopicCreate, service: TopicService = Depends(get_topic_service)):
+    return service.create(topic)
 
-@router.get("/", response_model=list[Topic], tags=["Topics"])
-def get_topics(db: Session = Depends(get_db)):
-    return topic_service.get_topics(db)
+@router.get("/", response_model=List[Topic])
+def get_topics(service: TopicService = Depends(get_topic_service)):
+    return service.get_all()
 
-@router.get("/{topic_id}", response_model=Topic, tags=["Topics"])
-def get_topic(topic_id: int, db: Session = Depends(get_db)):
-    return topic_service.get_topic(db, topic_id)
+@router.get("/{topic_id}", response_model=Topic)
+def get_topic(topic_id: int, service: TopicService = Depends(get_topic_service)):
+    return service.get_by_id(topic_id)
 
-@router.put("/{topic_id}", response_model=Topic, tags=["Topics"])
-def update_topic(topic_id: int, topic: Topic, db: Session = Depends(get_db)):
-    return topic_service.update_topic(db, topic_id, topic)
+@router.put("/{topic_id}", response_model=Topic)
+def update_topic(topic_id: int, topic: TopicUpdate, service: TopicService = Depends(get_topic_service)):
+    return service.update(topic_id, topic)
 
-@router.delete("/{topic_id}", tags=["Topics"], status_code=204)
-def delete_topic(topic_id: int, db: Session = Depends(get_db)):
-    topic_service.delete_topic(db, topic_id)
+@router.delete("/{topic_id}", status_code=204)
+def delete_topic(topic_id: int, service: TopicService = Depends(get_topic_service)):
+    service.delete(topic_id)
+    return None
