@@ -21,8 +21,6 @@ O PulsoDigital API segue uma arquitetura em camadas baseada no padrão MCS (Mode
 │   ├── models/            # Classes ORM SQLAlchemy
 │   ├── schemas/           # Classes Pydantic para validação de dados
 │   └── settings.py        # Configurações da aplicação
-├── db
-│   └── migrations/        # Migrações do banco de dados
 ├── repositories/          # Camada de acesso a dados
 ├── services/              # Camada de lógica de negócios
 └── main.py                # Ponto de entrada da aplicação
