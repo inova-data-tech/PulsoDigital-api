@@ -1,6 +1,7 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.core.models.topic import Topic as TopicModel
+from app.core.models.theme import Theme as ThemeModel
 from app.core.schemas.topic import TopicCreate, TopicUpdate, Topic as TopicSchema
 
 

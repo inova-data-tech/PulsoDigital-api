@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class TopicBase(BaseModel):
-    name: str
-    theme: str
+    name: str = Field(..., min_length=1, max_length=100, description="Topic of the theme being evaluated")
+    theme_id: int = Field(..., description="ID of the theme to which the topic belongs")
     
 class TopicCreate(TopicBase):
     pass
@@ -12,9 +12,9 @@ class TopicUpdate(TopicBase):
 
 class Topic(TopicBase):
     id: int
+    theme: str = Field(..., description="Theme of the topic being evaluated")
     
-    class Topic(BaseModel):
+    class Config:
         orm_mode = True # Isso é crucial para converter modelos ORM para schemas
         from_attributes = True
        
-

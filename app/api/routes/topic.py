@@ -9,15 +9,15 @@ router = APIRouter(
     tags=["Topics"]
 )
 
-@router.post("/", response_model=Topic)
+@router.post("/")
 def create_topic(topic: TopicCreate, service: TopicService = Depends(get_topic_service)):
     return service.create(topic)
 
-@router.get("/", response_model=List[Topic])
+@router.get("/")
 def get_topics(service: TopicService = Depends(get_topic_service)):
     return service.get_all()
 
-@router.get("/{topic_id}", response_model=Topic)
+@router.get("/{topic_id}")
 def get_topic(topic_id: int, service: TopicService = Depends(get_topic_service)):
     return service.get_by_id(topic_id)
 

@@ -16,5 +16,5 @@ def get_theme_service(repo: ThemeRepository = Depends(get_theme_repository)) -> 
 def get_topic_repository(db: Session = Depends(get_db)) -> TopicRepository:
     return TopicRepository(db)
 
-def get_topic_service(repo: TopicRepository = Depends(get_topic_repository)) -> TopicService:
-    return TopicService(repo)
+def get_topic_service(repo: TopicRepository = Depends(get_topic_repository), theme_repo: ThemeRepository = Depends(get_theme_repository)) -> TopicService:
+    return TopicService(repo, theme_repo)
