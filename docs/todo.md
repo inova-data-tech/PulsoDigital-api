@@ -11,6 +11,11 @@
 - [x] Implementar rotas para a entidade `Theme`.
 - [x] Corrigir erro de confusão entre schemas Pydantic e modelos ORM.
 - [x] Adicionar lógica de reconexão ao banco de dados com backoff exponencial.
+- [x] Criar modelo ORM para `Topic`.
+- [x] Criar schema Pydantic para `Topic`.
+- [x] Implementar repositório para `Topic`.
+- [x] Implementar serviço para `Topic`.
+- [x] Implementar rotas para `Topic`.
 
 ## Pendências
 
@@ -27,13 +32,6 @@
 - [ ] Implementar repositório para `DataSource`.
 - [ ] Implementar serviço para `DataSource`.
 - [ ] Implementar rotas para `DataSource`.
-
-### Topic
-- [ ] Criar modelo ORM para `Topic`.
-- [ ] Criar schema Pydantic para `Topic`.
-- [ ] Implementar repositório para `Topic`.
-- [ ] Implementar serviço para `Topic`.
-- [ ] Implementar rotas para `Topic`.
 
 ## Melhorias Futuras
 
