@@ -19,6 +19,7 @@ services:
       bash -c "
         apt-get update &&
         apt-get install -y locales &&
+        apt-get install -y apt-utils &&
         sed -i -e 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen &&
         locale-gen &&
         update-locale LANG=pt_BR.UTF-8 &&
