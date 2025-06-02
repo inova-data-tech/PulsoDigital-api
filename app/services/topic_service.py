@@ -1,4 +1,3 @@
-from sqlalchemy.orm import Session
 from app.repositories.topic_repository import TopicRepository
 from app.repositories.theme_repository import ThemeRepository
 from app.core.schemas.topic import TopicCreate, TopicUpdate, Topic as TopicSchema

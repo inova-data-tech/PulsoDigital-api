@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from app.core.bootstrap.db import Base
 
 class Topic(Base):
@@ -6,4 +7,5 @@ class Topic(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, unique=True)
     theme_id = Column(Integer, ForeignKey('themes.id'))
-   
+    
+    theme = relationship('Theme', back_populates='topics')
