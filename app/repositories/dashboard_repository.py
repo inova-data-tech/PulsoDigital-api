@@ -4,7 +4,6 @@ from app.core.models.dashboard import Dashboard as DashboardModel
 from app.core.models.topic import Topic as TopicModel
 from app.core.schemas.dashboard import DashboardCreate, DashboardUpdate, Dashboard as DashboardSchema
 from app.repositories.topic_repository import TopicRepository
-from app.repositories.dashboard_repository import DashboardRepository
 from fastapi import HTTPException
 
 class DashboardRepository:

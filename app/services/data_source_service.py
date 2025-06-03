@@ -1,4 +1,3 @@
-from app.core.models.data_source import DataSource
 from app.repositories.topic_repository import TopicRepository
 from app.repositories.data_source_repository import DataSourceRepository
 from app.core.schemas.data_source import DataSourceCreate, DataSourceUpdate, DataSource as DataSourceSchema

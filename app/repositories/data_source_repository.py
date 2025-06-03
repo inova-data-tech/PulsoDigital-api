@@ -1,4 +1,5 @@
-from app.core.models.data_source import DataSource
+from app.core.models.data_source import DataSource as DataSourceModel
+from app.core.schemas.data_source import DataSourceCreate, DataSourceUpdate, DataSource as DastaSourceSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
@@ -6,8 +7,8 @@ class DataSourceRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, data_source_data: DataSource) -> DataSource:
-        db_data_source = DataSource(
+    def create(self, data_source_data: DataSourceCreate) -> DataSourceModel:
+        db_data_source = DataSourceModel(
             source_type=data_source_data.source_type,
             sourceURL=data_source_data.sourceURL,
             biased=data_source_data.biased,
@@ -18,16 +19,16 @@ class DataSourceRepository:
         self.db.refresh(db_data_source)
         return db_data_source
     
-    def get_all(self) -> list[DataSource]:
-        return self.db.query(DataSource).all()
+    def get_all(self) -> list[DataSourceModel]:
+        return self.db.query(DataSourceModel).all()
     
-    def get_by_id(self, data_source_id: int) -> DataSource:
-        db_data_source = self.db.query(DataSource).filter(DataSource.id == data_source_id).first()
+    def get_by_id(self, data_source_id: int) -> DataSourceModel:
+        db_data_source = self.db.query(DataSourceModel).filter(DataSourceModel.id == data_source_id).first()
         if not db_data_source:
             raise HTTPException(status_code=404, detail="Data source not found")
         return db_data_source
     
-    def update(self, data_source_id: int, data_source_data: DataSource) -> DataSource:
+    def update(self, data_source_id: int, data_source_data: DataSourceUpdate) -> DataSourceModel:
         db_data_source = self.get_by_id(data_source_id)
         if not db_data_source:
             raise HTTPException(status_code=404, detail="Data source not found")
