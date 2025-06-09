@@ -36,7 +36,15 @@ class TopicService:
             raise HTTPException(status_code=404, detail="Topic not found")
         return TopicSchema.from_orm(updated_topic)
     
+    def get_by_name(self, topic_name: str) -> Optional[TopicSchema]:
+        topic = self.repository.get_by_name(topic_name)
+        if topic is None:
+            return None
+        topic.theme = self.theme_repository.get_by_id(topic.theme_id).name
+        return TopicSchema.from_orm(topic)
+    
     def delete(self, topic_id: int) -> None:
         success = self.repository.delete(topic_id)
         if not success:
             raise HTTPException(status_code=404, detail="Topic not found")
+    

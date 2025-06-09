@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import logging
-from app.api.routes import theme, healthcheck, topic, dashboard, data_source
+from app.api.routes import theme, healthcheck, topic, dashboard, data_source, webhook
 from app.core.bootstrap.db import get_db_instance
 from app.core.bootstrap.seeder import Seeder
 from app.core.settings import settings
@@ -24,9 +24,8 @@ app.include_router(theme.router)
 app.include_router(topic.router)
 app.include_router(dashboard.router)
 app.include_router(data_source.router)
-#app.include_router(topic.router, prefix="/api/topics", tags=["Topics"])
-#app.include_router(data_source.router, prefix="/api/data-sources", tags=["DataSources"])
-#app.include_router(dashboard.router, prefix="/api/dashboards", tags=["Dashboards"])
+app.include_router(webhook.router)
+
 
 # Rota raiz
 @app.get("/")

@@ -33,6 +33,9 @@ class TopicRepository:
             self.db.refresh(db_topic)
         return db_topic
     
+    def get_by_name(self, topic_name: str) -> Optional[TopicModel]:
+        return self.db.query(TopicModel).filter(TopicModel.name == topic_name).first()
+    
     def delete(self, topic_id: int) -> bool:
         db_topic = self.get_by_id(topic_id)
         if db_topic:
