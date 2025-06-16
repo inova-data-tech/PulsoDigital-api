@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # Application settings
     API_PORT: int = 8000
     ENVIRONMENT: str = "development"  # development, testing, production
+    AI_API_URL: str = "https://api.example.com/ai"
 
     # Database settings
     DB_HOST: str

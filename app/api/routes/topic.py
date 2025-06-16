@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from app.core.schemas.topic import TopicCreate, TopicUpdate, Topic
 from app.api.dependencies import get_topic_service
 from app.services.topic_service import TopicService
+from app.core.settings import settings
 import httpx
 
 
@@ -52,7 +53,7 @@ async def trigger_task_for_topic(
         "webhook": webhook_url
     }
     async with httpx.AsyncClient() as client:
-        response = await client.post("URL_DA_API_TERCEIRA", json=payload)
+        response = await client.post(settings.AI_API_URL, json=payload)
         response.raise_for_status()
         return {
             "message": "Task triggered",
