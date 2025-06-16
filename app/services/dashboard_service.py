@@ -14,9 +14,15 @@ class DashboardService:
         db_dashboard = self.repository.create(dashboard)
         if db_dashboard is None:
             raise HTTPException(status_code=400, detail="Dashboard creation failed")
-        # Convertendo o modelo para schema
         db_dashboard.topic = self.topic_repository.get_by_id(db_dashboard.topic_id).name
         return DashboardSchema.from_orm(db_dashboard)
+    
+    def create_with_evaluations(self, dashboard_data: dict) -> DashboardSchema:
+        db_dashboard = self.repository.create_with_evaluations(dashboard_data)
+        if db_dashboard is None:
+            raise HTTPException(status_code=400, detail="Dashboard creation with evaluations failed")
+        return DashboardSchema.from_orm(db_dashboard)
+
     
     def get_all(self) -> List[DashboardSchema]:
         db_dashboards = self.repository.get_all()
